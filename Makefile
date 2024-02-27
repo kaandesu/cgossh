@@ -6,7 +6,33 @@ GOLANGCI_VERSION = 1.56.2
 DOCKER_REPO = server
 DOCKER_TAG = latest
 
-all: git-hooks tidy ## Initializes all tools
+# CLIENT
+CC=clang
+CFLAGS=-g -Wall
+OBJS=client/ring_buffer.o 
+BIN=client/buffer_test
+RM=rm -f
+
+#MUTUAL
+
+all: git-hooks tidy ${BIN} ## Initializes all tools
+
+clean: clean-client clean-server ## Cleans up everything
+# CLIENT
+%.o: %.c %.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(BIN): client/ring_buffer.c $(OBJS)
+	$(CC) $(CFLAGS) $^ -o $@
+	
+clean-client:
+	$(RM) -r $(OBJS) $(BIN) *.dSYM
+
+
+# SERVER
 
 out:
 	@mkdir -p out
@@ -65,7 +91,7 @@ test-reports: out/report.json
 out/report.json: out
 	@cd server && go test -count 1 ./... -coverprofile=../out/cover.out --json | tee "../$(@)"
 
-clean: ## Cleans up everything
+clean-server: ## Cleans up everything
 	@cd server && rm -rf ../bin ../out
 
 docker: ## Builds docker image
