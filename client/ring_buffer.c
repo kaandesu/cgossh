@@ -1,4 +1,5 @@
 #include "ring_buffer.h"
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,12 +7,19 @@
 
 #define SIZE 5
 
-void init_ring(ring *ring, int capacity) {
-  ring->head = 0;
-  ring->tail = 0;
-  ring->len = 0;
-  ring->capacity = capacity;
-  ring->buffer = (int *)malloc(ring->capacity * sizeof(int));
+typedef struct rng {
+  int *buffer;
+  int head, tail, len, capacity;
+} ring;
+
+ring *init_ring(int capacity) {
+  ring *r = (ring *)malloc(sizeof(ring));
+  r->head = 0;
+  r->tail = 0;
+  r->len = 0;
+  r->capacity = capacity;
+  r->buffer = (int *)malloc(r->capacity * sizeof(int));
+  return r;
 }
 
 bool ring_empty(ring *ring) { return ring->len == 0; }

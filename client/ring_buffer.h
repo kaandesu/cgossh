@@ -2,19 +2,15 @@
 #define RING_BUFFER_H
 
 #include <stdbool.h>
+typedef struct rng ring;
 
-typedef struct {
-  int *buffer;
-  int head, tail, len, capacity;
-} ring;
-
-void print_ring(ring *ring);
-void init_ring(ring *ring, int capacity);
-bool ring_empty(ring *ring);
-bool ring_full(ring *ring);
-void Consume(ring *ring);
-void resize_ring(ring *ring);
-void add_ring(ring *ring, int data);
-void print_ring(ring *ring);
+void print_ring(ring *r);
+ring *init_ring(int capacity);
+bool ring_empty(ring *r);
+bool ring_full(ring *r);
+void Consume(ring *r);
+void resize_ring(ring *r);
+void add_ring(ring *r, int data);
+void print_ring(ring *r);
 
 #endif
