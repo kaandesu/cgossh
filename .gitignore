@@ -7,6 +7,13 @@
 server/bin/
 server/out/
 
+
+##########
+# C client #
+##########
+
+client/*.o
+
 ##########
 # Golang #
 ##########
