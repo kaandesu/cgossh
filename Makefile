@@ -25,12 +25,14 @@ clean: clean-client clean-server ## Cleans up everything
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BIN): client/ring_buffer.c $(OBJS)
+$(BIN): client/buffer_test.c $(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@
 	
 clean-client:
-	$(RM) -r $(OBJS) $(BIN) *.dSYM
+	$(RM) -r $(OBJS) $(BIN) ./*/*.dSYM
 
+run-client: ${BIN} ## Run the app
+	@./client/buffer_test
 
 # SERVER
 
@@ -49,7 +51,7 @@ tidy: ## Cleans up go.mod and go.sum
 fmt: ## Formats all code with go fmt
 	@cd server && go fmt ./...
 
-run: fmt ## Run the app
+run-server: fmt ## Run the app
 	@cd server && go run ./cmd/server/main.go
 
 test-build: ## Tests whether the code compiles
