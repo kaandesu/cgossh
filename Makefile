@@ -8,32 +8,68 @@ DOCKER_TAG = latest
 
 # CLIENT
 CC=clang
+CLIENT_DIR=client
 CFLAGS=-g -Wall
-OBJS=client/ring_buffer.o 
+SRCS=$(wildcard $(CLIENT_DIR)/*.c)
+OBJS=$(patsubst $(CLIENT_DIR)/%.c, $(CLIENT_DIR)/%.o, $(SRCS))
 BIN=client/tests/buffer
 TEST_FILE=client/tests/buffer.c
 RM=rm -f
 
-# CLIENT TEST SETUP
+LIB_DIR=$(CLIENT_DIR)/lib
+LIB = $(LIB_DIR)/ring_buffer.a
 
 
 #MUTUAL
-
-all: git-hooks tidy ${BIN} ## Initializes all tools
+all: git-hooks tidy ${LIB} ## Initializes all tools
 
 clean: clean-client clean-server ## Cleans up everything
+
+test: test-client test-server ## Runs all tests
+# CLIENT TEST SETUP
+
+TEST_DIR=client/tests
+TESTS=$(wildcard $(TEST_DIR)/*.c)
+TEST_BINS=$(patsubst $(TEST_DIR)/%.c, $(TEST_DIR)/bin/%, $(TESTS))
+
+$(TEST_DIR)/bin/%: $(TEST_DIR)/%.c
+	$(CC) $(CFLAGS) $< $(OBJS) -o $@ -I/opt/homebrew/include -L/opt/homebrew/lib -lcriterion
+
+$(TEST_DIR)/bin:
+	mkdir $@
+
+
+test-client: $(LIB) $(TEST_DIR)/bin $(TEST_BINS)
+	@for test in $(TEST_BINS) ; do \
+		$$test; \
+	done
+
+
 # CLIENT
+release-client: test-client
+release-client: CFLAGS=-Wall -O2 -DNDEBUG -I/opt/homebrew/include -L/opt/homebrew/lib -lcriterion 
+release-client: clean-client 
+release-client: $(LIB) 
+
+
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+$(LIB_DIR):
+	@mkdir  $@
+
+$(LIB): $(LIB_DIR) $(OBJS)
+	$(RM) $(LIB)
+	ar rcs $(LIB) $(OBJS)
+
 $(BIN): $(TEST_FILE) $(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@
 	
 clean-client:
-	$(RM) -r $(OBJS) $(BIN) ./*/*.dSYM
+	$(RM) -r $(OBJS) $(LIB) $(TEST_DIR)/bin/* $(BIN) ./*/*.dSYM
 
 run-client: ${BIN} ## Run the app
 	@./${BIN}
@@ -82,7 +118,7 @@ lint-reports: out/lint.xml
 out/lint.xml: $(GOLANGCI_LINT) out download
 	@cd server && $(GOLANGCI_LINT) run ./... --out-format checkstyle | tee "$(@)"
 
-test: ## Runs all tests
+test-server: ## Runs all tests
 	@cd server && go test $(ARGS) ./...
 
 coverage: out/report.json ## Displays coverage per func on cli
