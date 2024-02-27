@@ -13,8 +13,9 @@ server/out/
 ##########
 
 client/*.o
-client/*_test
-client/*.dSYM
+client/tests/*
+!client/tests/*.c
+client/*/*.dSYM
 
 ##########
 # Golang #

@@ -10,8 +10,12 @@ DOCKER_TAG = latest
 CC=clang
 CFLAGS=-g -Wall
 OBJS=client/ring_buffer.o 
-BIN=client/buffer_test
+BIN=client/tests/buffer
+TEST_FILE=client/tests/buffer.c
 RM=rm -f
+
+# CLIENT TEST SETUP
+
 
 #MUTUAL
 
@@ -25,14 +29,14 @@ clean: clean-client clean-server ## Cleans up everything
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BIN): client/buffer_test.c $(OBJS)
+$(BIN): $(TEST_FILE) $(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@
 	
 clean-client:
 	$(RM) -r $(OBJS) $(BIN) ./*/*.dSYM
 
 run-client: ${BIN} ## Run the app
-	@./client/buffer_test
+	@./${BIN}
 
 # SERVER
 
