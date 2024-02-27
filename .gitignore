@@ -7,10 +7,15 @@
 server/bin/
 server/out/
 
+.cache
+
+# create the compile_commands.json file yourself
+compile_commands.json
 
 ##########
 # C client #
 ##########
+
 
 client/*.o
 client/tests/*
