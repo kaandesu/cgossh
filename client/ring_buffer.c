@@ -1,45 +1,10 @@
-
-#include <stdbool.h>
+#include "ring_buffer.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
 #define SIZE 5
-
-typedef struct {
-  int *buffer;
-  int head, tail, len, capacity;
-} ring;
-
-void print_ring(ring *ring);
-void init_ring(ring *ring, int capacity);
-bool ring_empty(ring *ring);
-bool ring_full(ring *ring);
-void Consume(ring *ring);
-void resize_ring(ring *ring);
-void add_ring(ring *ring, int data);
-void print_ring(ring *ring);
-
-int main() {
-  int step = 0;
-
-  ring ringBuffer;
-  init_ring(&ringBuffer, SIZE);
-  while (1) {
-    add_ring(&ringBuffer, 1);
-    if (step % 3 == 0 && step != 0)
-      Consume(&ringBuffer);
-
-    printf("\n");
-    print_ring(&ringBuffer);
-    step++;
-    getchar();
-    system("clear");
-  }
-
-  return 0;
-}
 
 void init_ring(ring *ring, int capacity) {
   ring->head = 0;
