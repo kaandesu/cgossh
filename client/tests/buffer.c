@@ -1,6 +1,4 @@
 #include "../ring_buffer.h"
-// #include <stdio.h>
-// #include <stdlib.h>
 #include <criterion/criterion.h>
 
 ring *r = NULL;
@@ -22,11 +20,11 @@ Test(buffer, adding_elements) {
 }
 
 Test(buffer, adding_elements_until_full) {
-  cr_expect(add_ring(r, 1), "expected adding element to succeed");
-  cr_expect(add_ring(r, 1), "expected adding element to succeed");
-  cr_expect(add_ring(r, 1), "expected adding element to succeed");
+  cr_expect(add_ring(r, 1), "expected adding an element to succeed");
+  cr_expect(add_ring(r, 1), "expected adding an element to succeed");
+  cr_expect(add_ring(r, 1), "expected adding an element to succeed");
 
   cr_expect(ring_full(r), "expected ring to be full");
-  cr_expect(add_ring(r, 1) == false, "expected adding element fail");
+  cr_expect(add_ring(r, 1) == false, "expected adding an element to fail");
   cr_expect(ring_full(r), "expected ring to be full");
 }

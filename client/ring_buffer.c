@@ -8,7 +8,7 @@
 
 typedef struct rng {
   int *buffer;
-  int head, tail, len, capacity;
+  int head, tail, len, capacity, max_capacity;
 } ring;
 
 ring *init_ring(int capacity) {
@@ -17,6 +17,7 @@ ring *init_ring(int capacity) {
   r->tail = 0;
   r->len = 0;
   r->capacity = capacity;
+  r->max_capacity = r->capacity;
   r->buffer = (int *)malloc(r->capacity * sizeof(int));
   return r;
 }
@@ -32,10 +33,8 @@ void Consume(ring *ring) {
 }
 
 bool resize_ring(ring *ring) {
-  if (ring_full(ring)) {
-    return false;
-  }
   int newSize = ring->capacity * 2;
+  ring->max_capacity = newSize;
   int *newBuffer = (int *)malloc(newSize * sizeof(int));
   if (newBuffer == NULL) {
     perror("Error allocating memory \n");
@@ -69,9 +68,9 @@ bool add_ring(ring *ring, int data) {
   ring->len = ring->len + 1;
   ring->tail = (ring->tail + 1) % ring->capacity;
 
+  // FIX: fix resising when reached the max capacity
   if ((ring->tail) % ring->capacity == ring->head &&
-      ring->len != ring->capacity) {
-
+      ring->capacity != ring->max_capacity) {
     resize_ring(ring);
   }
 
