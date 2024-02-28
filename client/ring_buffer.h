@@ -5,7 +5,8 @@
 typedef struct rng ring;
 
 void print_ring(ring *r);
-ring *init_ring(int capacity);
+void info_ring(ring *r);
+ring *init_ring(int capacity, int max_capacity);
 bool ring_empty(ring *r);
 bool ring_full(ring *r);
 void Consume(ring *r);

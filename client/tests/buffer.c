@@ -3,7 +3,7 @@
 
 ring *r = NULL;
 
-void suitesetup(void) { r = init_ring(3); }
+void suitesetup(void) { r = init_ring(3, 3); }
 
 void suiteteardown(void) { ring_destroy(r); }
 
