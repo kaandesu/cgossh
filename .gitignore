@@ -16,7 +16,7 @@ compile_commands.json
 # C client #
 ##########
 
-
+client/lib/*.a
 client/*.o
 client/tests/*
 !client/tests/*.c

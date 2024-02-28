@@ -41,7 +41,7 @@ $(TEST_DIR)/bin:
 
 test-client: $(LIB) $(TEST_DIR)/bin $(TEST_BINS)
 	@for test in $(TEST_BINS) ; do \
-		$$test; \
+		$$test --verbose; \
 	done
 
 

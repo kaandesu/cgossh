@@ -31,7 +31,10 @@ void Consume(ring *ring) {
   ring->head = (ring->head + 1) % ring->capacity;
 }
 
-void resize_ring(ring *ring) {
+bool resize_ring(ring *ring) {
+  if (ring_full(ring)) {
+    return false;
+  }
   int newSize = ring->capacity * 2;
   int *newBuffer = (int *)malloc(newSize * sizeof(int));
   if (newBuffer == NULL) {
@@ -54,14 +57,25 @@ void resize_ring(ring *ring) {
     ring->buffer[i] = newBuffer[i];
   }
   free(newBuffer);
+  return true;
 }
 
-void add_ring(ring *ring, int data) {
-  if ((ring->tail + 1) % ring->capacity == ring->head) {
+bool add_ring(ring *ring, int data) {
+  if (ring_full(ring)) {
+    return false;
+  }
+
+  ring->buffer[ring->tail] = data;
+  ring->len = ring->len + 1;
+  ring->tail = (ring->tail + 1) % ring->capacity;
+
+  if ((ring->tail) % ring->capacity == ring->head &&
+      ring->len != ring->capacity) {
+
     resize_ring(ring);
   }
-  ring->buffer[ring->tail] = data;
-  ring->tail = (ring->tail + 1) % ring->capacity;
+
+  return true;
 }
 
 void print_ring(ring *ring) {
