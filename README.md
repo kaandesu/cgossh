@@ -2,7 +2,7 @@
 
 <div align="center">
   <a href="https://github.com/kaandesu/cgossh">
-    <img src="./images/logo.webp" alt="Logo" width="110">
+    <img src="./images/logo.webp" alt="Logo" width="111">
   </a>
 </div>
 <br>
