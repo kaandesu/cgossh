@@ -9,7 +9,7 @@ DOCKER_TAG = latest
 # CLIENT
 CC=clang
 CLIENT_DIR=client
-CFLAGS=-g -Wall
+CFLAGS=-g -Wall -I/opt/homebrew/include -L/opt/homebrew/lib -lcriterion
 SRCS=$(wildcard $(CLIENT_DIR)/*.c)
 OBJS=$(patsubst $(CLIENT_DIR)/%.c, $(CLIENT_DIR)/%.o, $(SRCS))
 BIN=client/tests/buffer
