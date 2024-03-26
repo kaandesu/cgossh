@@ -1,4 +1,0 @@
-
-print("hellow world")
-
-◊jqwdqwqwefqwwfwiwfqwfqwfqwf

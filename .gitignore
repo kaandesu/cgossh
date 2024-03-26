@@ -3,6 +3,8 @@
 # Project #
 ###########
 
+*/.DS_Store
+
 # make output
 server/bin/
 server/out/
